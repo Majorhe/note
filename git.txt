@@ -1,0 +1,177 @@
+1: composer 安装 (https://pkg.phpcomposer.com/)
+	(1): 下载composer
+		a: php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
+		b: php composer-setup.php
+		c: php -r "unlink('composer-setup.php');"
+	(2): 全局安装
+		a: 找到并进入 PHP 的安装目录（和你在命令行中执行的 php 指令应该是同一套 PHP）。
+		b: 将 composer.phar 复制到 PHP 的安装目录下面，也就是和 php.exe 在同一级目录。
+		c: 在 PHP 安装目录下新建一个 composer.bat 文件，并将下列代码保存到此文件中。
+		
+		@php "%~dp0composer.phar" %*
+		
+		最后重新打开一个命令行窗口试一试执行 composer --version 看看是否正确输出版本号。
+		
+	(3): 全局配置
+		composer config -g repo.packagist composer https://packagist.phpcomposer.com
+		
+2: composer 安装 Yii2 失败
+		composer global require "fxp/composer-asset-plugin:^1.2.0"
+		
+3： composer 安装 Yii2 提供Github 访问令牌
+	登录个人Github账号，在setting中设置 personal access token
+	
+	
+4： git使用总结 ( https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137396287703354d8c6c01c904c7d9ff056ae23da865a000 )
+	(1): 创建版本库
+		a: 新建根目录文件夹并进入文件夹
+			$ mkdir testgit   		// 创建版本库(文件夹)
+			$ cd testgit      		// 进入版本库
+			$ pwd             		// 显示当前所在目录
+			/Users/michael/testgit
+			
+		b: 初始化一个版本库
+			$ git init
+	
+	(2): 提交文件到版本库
+	
+		a: 第一步是用git add把文件添加进去，实际上就是把文件修改添加到暂存区；
+			git add readme.txt
+
+		b: 第二步是用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支。
+			git commit -m "add a readme file" // 提交文件时需要填写注释
+		
+	(3): 版本回退
+		$ git log                   // 显示最近到最远的提交日志
+		$ git log --pretty=oneline  // 显示最近到最远的提交日志,每一条日志显示一行
+		
+		$ git reset --hard HEAD^    // 通过 git reset --hard 回退,上一个版本就是HEAD^，上上一个版本就是HEAD^^,以此类推 或者（HEAD~100， 回退到前100个版本）
+		$ git reset --hard 3628164  // 回退到指定的版本， 3628164 为 commit id, commit id没必要写全，前几位就可以了
+		$ git reflog				// 显示记录的历史命令
+		
+	(4): 管理修改和删除修改，删除文件
+	
+		a: 管理修改，查看文件修改
+			$ git diff HEAD -- readme.txt  // 查看工作区和版本库里面最新版本的readme.txt文件的区别
+			git commit只负责把暂存区的修改提交。 每次修改，如果不add到暂存区，那就不会加入到commit中
+		
+		b: 删除修改
+			场景1：当你改乱了工作区某个文件的内容但并未添加到暂存区，想直接丢弃工作区的修改时，用命令git checkout -- file。
+
+			场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD file，就回到了场景1，第二步按场景1操作。
+
+			场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考 "版本回退" 一节，不过前提是没有推送到远程库。
+			
+		c: 删除文件
+			当删除工作区的文件时
+			场景1: 同时也需要删除版本库中的相对应的文件
+				a: git rm file      // 删除版本库中的文件 file为文件名
+				b: git commit       // 提交删除操作
+				
+			场景2：误删工作区文件
+				git checkout -- test.txt
+	
+	(5): 生成ssh-key
+		a: 查看账户的主目录下的 ~/.ssh 目录是否存在，并且包含有 id_dsa, id_rsa.pub 文件，.pub文件为公钥文件
+		b: 若没有使用 ssh-keygen 命令生成公钥文件，在生成公钥时密码可以留空
+				
+	(6): 添加远程仓库
+		a: 登录GitHub并创建远程仓库
+		b: 关联远程仓库: $ git remote add origin git@github.com:Majorhe/testgit.git
+		c: $ git push -u origin master               		// 推送master分支的所有内容到远程仓库, -u 在第一次推送的时候使用，其他时候省略。 *注意 ：确保公钥在用户列表中
+		d: $ git pull 					  					// 从远程中抓取最新的提交
+		e: $ git branch --set-upstream dev origin/dev		// 设置本地dev分支与远程origin/dev分支的链接
+ 
+	(7): 从远程库克隆
+		$ git clone git@github.com:Majorhe/testgit.git
+		
+	(8): 创建与合并分支 
+	
+		查看分支：git branch
+
+		创建分支：git branch <name>                 // <name> 为分支名
+
+		切换分支：git checkout <name>
+
+		创建+切换分支：git checkout -b <name>
+
+		合并某分支到当前分支：git merge <name>       // Fast forward 模式
+		
+		合并某分支到当前分支：git merge --no-ff -m "merge with no-ff" <name>   // 禁止Fast forward 模式合并分支，因为本次合并要创建一个新的commit，所以加上-m参数，把commit描述写进去
+
+		删除分支：git branch -d <name>
+		强行删除：git branch -D <name>               // 强行删除一个没有被合并过的分支
+		
+	(9): 解决冲突
+		
+		当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。
+
+		用git log --graph --pretty=oneline --abbrev-commit命令可以看到分支合并图。
+		
+	(10)： Bug 分支
+		
+		a: 使用 git stash 命令把当前工作现场“储藏”起来
+			git stash
+		
+		b: 切换到需要修复bug的分支
+			git checkout master
+		
+		c: 创建bug分支并在该分支进行bug的修复
+			git checkout -b issue
+		
+		d: 合并bug分支并删除bug分支
+			git merge -- no-ff -m 'merged fix bug' issue
+			git branch -d issue
+		
+		e：查看stash(储藏) 列表 
+			git stash list
+			
+		f: 恢复 stash 内容
+			一是用git stash apply恢复，但是恢复后，stash内容并不删除，你需要用git stash drop来删除
+
+			另一种方式是用git stash pop，恢复的同时把stash内容也删了
+				
+	(11): 多人协作
+	
+		a: 查看远程库信息，使用git remote -v；
+
+		b: 本地新建的分支如果不推送到远程，对其他人就是不可见的；
+
+		c: 从本地推送分支，使用git push origin branch-name，如果推送失败，先用git pull抓取远程的新提交；
+
+		d: 在本地创建和远程分支对应的分支，使用git checkout -b branch-name origin/branch-name，本地和远程分支的名称最好一致；
+
+		e: 建立本地分支和远程分支的关联，使用git branch --set-upstream branch-name origin/branch-name；
+
+		f: 从远程抓取分支，使用git pull，如果有冲突，要先处理冲突。   // 如果git pull提示“no tracking information”则说明本地分支和远程分支的链接关系没有创建, 参照步骤 e
+		
+	(12): Github使用.gitignore文件忽略不必要上传的文件
+		a: 在代码目录下建立.gitignore文件(与.git同级，可以使用  touch .gitignore 命令生成该文件)
+		
+		b: 配置语法：
+		　　1: 以斜杠“/”开头表示目录；
+		　　2: 以星号“*”通配多个字符；
+		　　3: 以问号“?”通配单个字符
+		　　4: 以方括号“[]”包含单个字符的匹配列表；
+		　　5: 以叹号“!”表示不忽略(跟踪)匹配到的文件或目录;
+		
+		c: gitignore 的格式规范如下： 
+			1: 所有空行或者以注释符号 ＃ 开头的行都会被 Git 忽略。
+			2: 可以使用标准的 glob 模式匹配。
+			3: 匹配模式最后跟反斜杠（/）说明要忽略的是目录。
+			4: 要忽略指定模式以外的文件或目录，可以在模式前加上惊叹号（!）取反。
+			
+	(13): 创建新的空分支并拉取远程分支的代码
+			1: 切换到 master 分支
+			2：创建本地新分支
+			3：手动删除该新分支的所有内容
+			4：远程pull
+			
+			
+			
+	xshell:
+		1: cd /tmp/trackapp_tmp   				  // 进入临时目录
+		2：rz + 回车键                            // 选择上传的文件
+		3：cd /var/www/html/project/path/to/file  // 进入需要修改的文件目录
+		4：cp /tmp/trackapp_tmp/Filename.php .    // 复制临时目录中的filename.php 到当前目录中
+		5：ll                                     // 查看当前目录中的文件
