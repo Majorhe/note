@@ -167,11 +167,3 @@
 			3：手动删除该新分支的所有内容
 			4：远程pull
 			
-			
-			
-	xshell:
-		1: cd /tmp/trackapp_tmp   				  // 进入临时目录
-		2：rz + 回车键                            // 选择上传的文件
-		3：cd /var/www/html/project/path/to/file  // 进入需要修改的文件目录
-		4：cp /tmp/trackapp_tmp/Filename.php .    // 复制临时目录中的filename.php 到当前目录中
-		5：ll                                     // 查看当前目录中的文件
