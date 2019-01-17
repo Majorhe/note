@@ -1,0 +1,30 @@
+1、安装扩展依赖库（参考链接： https://www.jianshu.com/p/65490900a937）
+	注意:扩展是C写的,由于C与RabbitMQ通信一般需要依赖rabbitmq-c库(也就是librabbitmq，下载地址： https://github.com/alanxz/rabbitmq-c),所以编译扩展前需要先装依赖库。不同版本的扩展，对php版本和librabbitmq兼容性不一样。
+	安装rabbitmq-c前请先安装以下依赖：cmake, openssl, popt, xmlto, doxygen
+		
+	
+	1.1: rabbitmq-c依赖库下载： https://github.com/alanxz/rabbitmq-c/archive/v0.8.0.tar.gz
+	1.2: mkdir build && cd build # 这一步是在rabbitmq-c的根目录下创建一个build子目录
+	1.3 cmake -DCMAKE_INSTALL_PREFIX=/usr/local/librabbitmq ..  # 这一步是让cmake根据../CMakeList.txt，即rabbitmq-c的根目录下的CMakeList.txt创建Makefile文件，Makefile文件会被创建到build目录中, '..'不要省略
+		错误1：如果出现 openssl未找到的错误
+		解决方案：
+			a):先查看是否安装openssl， 如未安装请先安装。
+			b):cmake -DCMAKE_INSTALL_PREFIX=/usr/local/librabbitmq -DOPENSSL_ROOT_DIR=/usr/local/ssl -DOPENSSL_LIBRARIES=/usr/local/ssl/lib ..   // 其中新添加的两个参数分别指定了 openssl 的根路径以及lib路径。
+
+	1.4 cmake --build . # 这一步是真正的build rabbitmq-c库的，注意，不要漏掉结尾的点 '.'
+	1.5 make
+	1.6 make install
+
+2、安装amqp扩展
+	2.1: amqp扩展下载： http://pecl.php.net/get/amqp-1.9.0.tgz # 或者更高版本
+	2.2: tar zvxf amqp-1.9.0.tgz #解压
+	2.3: cd amqp-1.9.9 #打开目录
+	2.4: phpize     # 生成 configure 文件
+	2.5: ./configure --with-php-config=/usr/local/bin/php-config --with-amqp --with-librabbitmq-dir=/usr/local/librabbitmq //说明：参数 --with-php-config 为PHP的php-config 命令所在的路径， 可通过 which php-config 命令查看路径；--with-librabbitmq-dir 为 librabbitmq 的安装路径 （即rabbitmq-c的安装路径）
+	2.6: make    		# 建议运行该命令后运行 make test
+	2.7: make install
+
+3、修改php.ini
+	extension=amqp.so #extension_dir自己定义
+
+4、重启php-fpm
