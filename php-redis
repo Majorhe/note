@@ -1,0 +1,54 @@
+-- Ubuntu上PHP7.1安装路径及redis扩展安装
+
+1. Ubuntu16.04上使用sudo apt-get install php7.1 安装php的默认路径如下：
+
+　　a. php可执行命令：/usr/bin/php7.1  和 /usr/bin/php
+
+　　b. 需要安装sudo apt install php7.1-dev 才会有 /usr/bin/phpize，和/usr/bin/php-config。后面安装扩展时会用到。
+
+　　c. .so文件路径：/usr/lib/php/20160303，这个可以从phpinfo()中看到
+
+　　d. php的*.ini配置文件目录：/etc/php/7.1/ 下有三个目录
+
+　　
+
+　　　mods-available目录存放各种可加载的php扩展的ini配置，后面安装redis扩展后，就要在这里添加redis.ini文件
+
+　　　cli/conf.d 目录存放的是php在命令行模式下已加载的扩展，文件名如：20-redis.ini
+
+　　　apache2/conf.d 目录存放的是web模式下已加载的扩展，文件名如：10-pdo.ini  这个可以从phpinfo()里面看到加载的各种ini文件的路径
+
+　　　cli/conf.d和apache2/conf.d目录下的 n-###.ini 都不需要创建，直接从mods-available软链接得来。文件名中的数字表示优先级
+
+2. 安装php的redis扩展：
+
+　　a. 官网地址http://pecl.php.net/package/redis，在redis-4.0.1.tgz上右键复制链接地址
+
+　　
+
+　　b. 在ubuntu中使用wget http://pecl.php.net/get/redis-4.0.1.tgz ， 下载到当前目录
+
+　　c. tar -zxvf redis-4.0.1.tgz解压到当前目录
+
+　　d. cd redis-4.0.1
+
+　　e. 执行phpize
+
+　　f. ./configure --with-php-config=/usr/bin/php-config
+
+　　g. make
+
+　　h. make install
+
+　　此时redis.so文件已自动加入到/usr/lib/php/20160303目录下
+
+　　i. 在/etc/php/7.1/mods-available目录下创建redis.ini文件，写入一行extension=redis.so
+
+　　j. 创建软链接 sudo ln -s /etc/php/7.1/mods-available/redis.ini /etc/php/7.1/cli/conf.d/20-redis.ini ，此时/etc/php/7.1/cli/conf.d目录下就有20-redis.ini文件
+
+　　k.创建软链接 sudo ln -s /etc/php/7.1/mods-available/redis.ini /etc/php/7.1/apache2/conf.d/20-redis.ini ， 此时/etc/php/7.1/apache2/conf.d目录下就有20-redis.ini文件
+
+　　l. 重启apache：sudo /etc/init.d/apache2 restart
+
+　　m. 此时刷新phpinfo页就能看到redis扩展已经加载了
+
