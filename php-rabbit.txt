@@ -22,6 +22,9 @@
 	2.4: phpize     # 生成 configure 文件
 	2.5: ./configure --with-php-config=/usr/local/bin/php-config --with-amqp --with-librabbitmq-dir=/usr/local/librabbitmq //说明：参数 --with-php-config 为PHP的php-config 命令所在的路径， 可通过 which php-config 命令查看路径；--with-librabbitmq-dir 为 librabbitmq 的安装路径 （即rabbitmq-c的安装路径）
 	2.6: make    		# 建议运行该命令后运行 make test
+		错误1: /usr/bin/ld: cannot find -lrabbitmq （ 一般出现这种类型的错误都是 1.系统缺乏对应的库文件，2.版本不对应，可以通过下载安装lib来解决 apt-get install libxxx-dev ）
+		解决方案: a): 先查看 rabbitmq-dev 是否存在 （sudo apt-cache search rabbitmq-dev）
+			 b): sudo apt-get install rabbitmq-dev
 	2.7: make install
 
 3、修改php.ini
