@@ -1,6 +1,6 @@
 1、安装扩展依赖库（参考链接： https://www.jianshu.com/p/65490900a937）
 	注意:扩展是C写的,由于C与RabbitMQ通信一般需要依赖rabbitmq-c库(也就是librabbitmq，下载地址： https://github.com/alanxz/rabbitmq-c),所以编译扩展前需要先装依赖库。不同版本的扩展，对php版本和librabbitmq兼容性不一样。
-	安装rabbitmq-c前请先安装以下依赖：cmake, openssl, popt, xmlto, doxygen
+	安装rabbitmq-c前请先安装以下依赖：cmake, (可选：openssl, popt, xmlto, doxygen)
 		
 	
 	1.1: rabbitmq-c依赖库下载： https://github.com/alanxz/rabbitmq-c/archive/v0.8.0.tar.gz
