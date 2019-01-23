@@ -31,3 +31,6 @@
 	extension=amqp.so #extension_dir自己定义
 
 4、重启php-fpm
+
+5、解决rabbitMQ时报错Call to undefined function PhpAmqpLib\Wire\bcadd()
+	解决方案： 这是由于 bcmath 的版本对不上的原因，可以根据php的版本安装对应的bcmath，例如：php7.2 可以安装 php7.2-bcmath （sudo apt-get install php7.2-bcmath， 在安装之前可以先查找需要安装的bcmath是否存在）
