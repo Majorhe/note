@@ -172,6 +172,43 @@
 		
 		
 		
-		
+		## 命令行启动关闭重启MySQL服务
+
+在命令行终端启动 MySQL 非常方便，下面大概介绍几个平台通过命令启动服务的方法。
+
+### 查看服务是否启动
+
+```
+# 还可以这么查看，MySQL服务器是否启动
+ps -ef | grep mysqld
+
+# 查看服务运行的状态
+service mysqld status
+```
+
+### Mac OS X 下命令操作
+
+在 Mac 系统下操作起来就非常方便了。安装完之后就可以在终端上运行全局命令 mysql.server 命令，假设这个命令没有，你在系统的MySQL安装目录中找到 mysql.server 命令，运行它是一样的效果。
+
+```
+mysqld start
+mysql.server start    # 1. 启动
+mysql.server stop     # 2. 停止
+mysql.server restart  # 3. 重启
+```
+
+当你安装过 MySQL 并没有找到 mysql.server 命令，那这时你需要找到安装目录中的 mysql.server 命令工具了，如 `sudo /usr/local/mysql/support-files/mysql.server start`
+
+### Linux 下命令操作
+
+Linux生态系统中对服务的操作有点区别。其实在 Mac 系统下也可以直接 `mysqld start` 来启动服务。
+
+1. 启动：`service mysqld start`
+2. 停止：`service mysqld stop`
+3. 重启：`service mysqld restart`
+4. 查看状态：`service mysqld status`
+5. 查看状态：`systemctl status mysqld.service`
+
+systemctl是一个systemd工具，主要负责控制systemd系统和服务管理器，在 Linux 系统中可以通过它来启动 mysql 服务。
 		
 		
